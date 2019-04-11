@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>vue-数据响应式</title>
+    </head>
+
+    <body>
+        <div id="app">
+            <h1>数据响应式</h1>
+            <div>
+                <div v-text="name"></div>
+                <div v-text="sex"></div>
+                <input type="text" v-model="name">
+            </div>
+        </div>
+
+        <script>
+            // 步骤梳理：
+            // 第一步：实现整体的一个架构
+            // 第二步：M到V
+            // 第三步：V到M 更新对应视图
+
+
+            // 发布者
+            class Vue {
+                constructor(options) {
+
+                    this.options = options;
+                    this.$data = options.data;
+                    this.$el = document.querySelector(options.el);
+                    this._directive = {};  // 存放订阅者的 容器
+
+                    this.Observer(this.$data);
+                    this.Compile(this.$el);
+                }
+
+                // 劫持数据
+                Observer(data) {
+                    for (const key in data) {
+                        this._directive[key] = [];
+                        let val = data[key];
+                        let watch = this._directive[key];
+
+                        Object.defineProperty(data, key, {
+                            get: () => {
+                                return val;
+                            },
+                            set: (newVal) => {
+                                if (newVal !== val) {
+                                    val = newVal;
+
+                                    watch.forEach(element => {
+                                        element.updata();
+                                    });
+                                }
+                            }
+                        })
+                    }
+                }
+
+                // 解析指令
+                Compile(el) {
+                    let nodes = el.children;
+                    for (let i = 0; i < nodes.length; i++) {
+                        let node = nodes[i];
+
+                        if (node.children.length) this.Compile(node);
+
+                        if (node.hasAttribute('v-text')) {
+                            let attrVal = node.getAttribute('v-text');
+
+                            // 添加订阅者
+                            // this._directive[attrVal].push('订阅者1');  
+                            // 注：this ==  vue对象
+                            this._directive[attrVal].push(new Watcher(node, this, attrVal, 'innerHTML'));
+
+                        }
+
+                        if (node.hasAttribute('v-model')) {  //判断是否含有指令v-model  文本框
+                            let attrVal = node.getAttribute('v-model');
+                            this._directive[attrVal].push(new Watcher(node, this, attrVal, 'value'));
+
+                            node.addEventListener('input', () => {
+                                this.$data[attrVal] = node.value;
+                            })
+                        }
+
+                    }
+                }
+            }
+
+            // 订阅者
+            class Watcher {   // 主要功能：更新视图( div.innerHTML = vue对象.$data['name'] )
+
+                constructor(el, vm, exp, attr) {
+                    this.el = el;
+                    this.vm = vm;
+                    this.exp = exp;
+                    this.attr = attr;
+                    this.updata();
+                }
+
+                updata() {
+                    this.el[this.attr] = this.vm.$data[this.exp];
+                }
+            }
+
+            const app = new Vue({
+                el: '#app',
+                data: {
+                    name: 'lingzi',
+                    sex: 'girl'
+                }
+            });
+            
+        </script>
+    </body>
+
+</html>
