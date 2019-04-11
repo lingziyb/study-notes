@@ -7,9 +7,6 @@ class Vue {
 
         this.Observer(this.data);
         this.Compile(this.el);
-
-        this.data.name = 'test'
-
     }
 
     // 监听器
@@ -38,8 +35,6 @@ class Vue {
         [...nodes].forEach((node, index) => {
             if (node.hasAttribute('v-text')) {
                 let attrVal = node.getAttribute('v-text');
-                // new Watcher(node, this, attrVal, 'innerHTML');
-
                 this.dep.addSub(new Watcher(node, this, attrVal, 'innerHTML'));
             }
 
