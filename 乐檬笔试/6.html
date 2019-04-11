@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+    </head>
+
+    <body>
+        <div>6</div>
+        <script>
+
+            const BallSize = {
+                SMALL: 1,
+                MIDDLE: 2,
+                BIG: 3,
+                LARGE: 4
+            }
+
+            function getRealSize(ballSize) {
+
+                console.log(111, ballSize)
+                let realSize = 0
+
+                switch (ballSize) {
+                    case BallSize.SMALL: {
+                        console.log(222);
+                        realSize = 10
+                    }
+
+                    case BallSize.MIDDLE:
+                        console.log(333);
+                        realSize = 50
+
+                    case BallSize.BIG:
+                        console.log(444)
+                        realSize = 200;
+                        break;
+
+                    case BallSize.LARGE: {
+                        console.log(555);
+                        realSize = 100
+                    }
+
+                    default:
+                        console.log(666);
+                        realSize = 0;
+                }
+
+                return realSize;
+            }
+
+            console.log(999, BallSize.BIG, getRealSize(BallSize.BIG));
+
+        </script>
+    </body>
+
+</html>

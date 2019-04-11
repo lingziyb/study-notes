@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+    </head>
+
+    <body>
+        <div>3</div>
+        <script>
+            String.prototype.shuffle = function () {
+
+                let arr = this.split('');
+                console.log(55, arr);
+
+                arr = arr.sort(function (a, b) {
+                    return Math.random() > 0.5 ? 1 : -1;
+                });
+                return arr.join('');
+            }
+
+            var foo = 'abcde';
+
+            console.log(11, foo);
+            console.log(22, foo.shuffle());
+            // console.log(33, foo.shuffle());
+        </script>
+    </body>
+
+</html>

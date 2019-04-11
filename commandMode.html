@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>命令模式</title>
+    </head>
+
+    <body>
+        <div>命令模式 实例</div>
+        <div id="title"></div>
+        <script>
+            const viewCommand = (function () {
+                const tpl = {
+                    product: [
+                        '<div>',
+                        '<img src="{#src#}" alt="">',
+                        '<p>{#text#}</p>',
+                        '</div>'
+                    ].join(''),
+                    title: [
+                        '<div class="title">',
+                        '<div class="main">',
+                        '<h2>{#title#}</h2>',
+                        '<p>{#tips#}</p>',
+                        '</div>',
+                        '</div>'
+                    ].join('')
+                };
+                let html = '';
+
+                function formateString(str, obj) {
+                    return str.replace(/\{#(\w+)#\}/g, function (match, key) {
+                        return obj[key];
+                    })
+                }
+
+                let action = {
+                    create: function (data, view) {
+                        if (data.length) {
+                            for (let i = 0; i < data.length; i++) {
+                                html += formateString(tpl[view], data[i]);
+                            }
+                        } else {
+                            html += formateString(tpl[view], data);
+                        }
+                    },
+                    display: function (container, data, view) {
+                        if (data) {
+                            this.create(data, view);
+                        }
+                        document.getElementById(container).innerHTML = html;
+                        html = '';
+                    }
+                };
+
+                return function excute(obj) {
+                    action[obj.command].apply(action, obj.param);
+                }
+            })();
+
+            viewCommand(
+                {
+                    command: 'create',
+                    param: [
+                        [
+                            {
+                                src: 'https://avatars3.githubusercontent.com/u/19299751?s=460&v=4',
+                                text: '小可爱'
+                            },
+                            {
+                                src: 'https://avatars3.githubusercontent.com/u/19299751?s=460&v=4',
+                                text: '小可爱'
+                            }
+                        ],
+                        'product']
+                }
+            )
+            viewCommand(
+                {
+                    command: 'display',
+                    param: ['title', { title: '夏日里的温馨', tips: '暖暖的温情带给人们家的感受' }, 'title']
+                }
+            )
+
+        </script>
+    </body>
+
+</html>

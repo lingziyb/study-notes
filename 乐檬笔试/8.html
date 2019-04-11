@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+    </head>
+
+    <body>
+        <div>8</div>
+        <script>
+            class Animal {
+                constructor(name) {
+                    this.props = {
+                        name
+                    };
+                }
+
+                fly() {
+                    function canFly() {
+                        console.log(this)
+                        return this.props.name === 'bird';
+                    }
+                    if (canFly()) {
+                        console.log('flying')
+                    }
+                    else {
+                        throw new Error('i am not a bird ...')
+                    }
+                }
+            }
+
+            const animal = new Animal('bird')
+            try {
+                animal.fly()
+            } catch (error) {
+                console.log(error.message)
+            }
+
+        </script>
+    </body>
+
+</html>
